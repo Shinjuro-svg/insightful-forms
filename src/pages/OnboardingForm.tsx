@@ -3,7 +3,7 @@ import { FormProgress } from "@/components/FormProgress";
 import { TrustBadge } from "@/components/TrustBadge";
 import { StatsCard } from "@/components/StatsCard";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
 import { PitchInformation } from "@/components/forms/PitchInformation";
 import { BasicInfo } from "@/components/forms/BasicInfo";
 import { Financials } from "@/components/forms/Financials";
@@ -11,10 +11,20 @@ import { Fundraise } from "@/components/forms/Fundraise";
 import { Impact } from "@/components/forms/Impact";
 import { Operations } from "@/components/forms/Operations";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  pitchInformationSchema,
+  basicInfoSchema,
+  financialsSchema,
+  fundraiseSchema,
+  impactSchema,
+  operationsSchema,
+} from "@/lib/validationSchemas";
 
 const OnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<any>({});
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const { toast } = useToast();
 
   const steps = [
@@ -26,9 +36,50 @@ const OnboardingForm = () => {
     "Operations",
   ];
 
+  const validateCurrentStep = (): boolean => {
+    setValidationErrors([]);
+    
+    try {
+      switch (currentStep) {
+        case 1:
+          pitchInformationSchema.parse(formData);
+          break;
+        case 2:
+          basicInfoSchema.parse(formData);
+          break;
+        case 3:
+          financialsSchema.parse(formData);
+          break;
+        case 4:
+          fundraiseSchema.parse(formData);
+          break;
+        case 5:
+          impactSchema.parse(formData);
+          break;
+        case 6:
+          operationsSchema.parse(formData);
+          break;
+      }
+      return true;
+    } catch (error: any) {
+      if (error.errors) {
+        const errors = error.errors.map((err: any) => err.message);
+        setValidationErrors(errors);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      toast({
+        title: "Validation Error",
+        description: "Please fix the errors before proceeding.",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   const handleNext = () => {
-    if (currentStep < 6) {
+    if (validateCurrentStep() && currentStep < 6) {
       setCurrentStep(currentStep + 1);
+      setValidationErrors([]);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -36,11 +87,16 @@ const OnboardingForm = () => {
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      setValidationErrors([]);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleSubmit = async () => {
+    if (!validateCurrentStep()) {
+      return;
+    }
+
     // TODO: Replace with actual R2 bucket integration
     console.log("Form data to be submitted:", formData);
     
@@ -99,6 +155,19 @@ const OnboardingForm = () => {
         <FormProgress currentStep={currentStep} totalSteps={6} steps={steps} />
 
         <div className="bg-card rounded-2xl shadow-lg p-8 mb-8">
+          {validationErrors.length > 0 && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <div className="font-semibold mb-2">Please fix the following errors:</div>
+                <ul className="list-disc list-inside space-y-1">
+                  {validationErrors.map((error, index) => (
+                    <li key={index} className="text-sm">{error}</li>
+                  ))}
+                </ul>
+              </AlertDescription>
+            </Alert>
+          )}
           {renderStep()}
 
           <div className="flex justify-between mt-8 pt-8 border-t border-border">

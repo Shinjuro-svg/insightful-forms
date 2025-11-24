@@ -21,7 +21,10 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
       <div className="grid grid-cols-1 gap-6">
         <div className="space-y-2">
           <Label htmlFor="payingCustomers">Do you have paying customers? <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ payingCustomers: value })}>
+          <Select 
+            value={data.payingCustomers || ""} 
+            onValueChange={(value) => updateData({ payingCustomers: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -34,7 +37,10 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
 
         <div className="space-y-2">
           <Label htmlFor="mvp">MVP <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ mvp: value })}>
+          <Select 
+            value={data.mvp || ""} 
+            onValueChange={(value) => updateData({ mvp: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Do you have a Minimum Viable Product?" />
             </SelectTrigger>
@@ -50,6 +56,7 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
           <Input
             id="launchDate"
             type="date"
+            value={data.launchDate || ""}
             onChange={(e) => updateData({ launchDate: e.target.value })}
           />
         </div>
@@ -58,6 +65,7 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
           <Label htmlFor="traction">Please describe your traction <span className="text-destructive">*</span></Label>
           <Textarea
             id="traction"
+            value={data.traction || ""}
             onChange={(e) => updateData({ traction: e.target.value })}
             placeholder="Describe your key metrics, user growth, revenue growth, partnerships, etc..."
             rows={5}
@@ -71,6 +79,7 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
           </p>
           <Textarea
             id="idealCustomer"
+            value={data.idealCustomer || ""}
             onChange={(e) => updateData({ idealCustomer: e.target.value })}
             placeholder="Describe your target customer profile in detail..."
             rows={5}

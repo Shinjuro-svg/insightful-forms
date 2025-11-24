@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload } from "lucide-react";
+import { Upload, CheckCircle } from "lucide-react";
 
 interface PitchInformationProps {
   data: any;
@@ -8,6 +8,9 @@ interface PitchInformationProps {
 }
 
 export const PitchInformation = ({ data, updateData }: PitchInformationProps) => {
+  const hasPitchDeck = data.pitchDeck && data.pitchDeck.length > 0;
+  const hasAdditionalInfo = data.additionalInfo && data.additionalInfo.length > 0;
+
   return (
     <div className="space-y-6">
       <div>
@@ -22,18 +25,30 @@ export const PitchInformation = ({ data, updateData }: PitchInformationProps) =>
           <Label htmlFor="pitchDeck" className="text-base font-medium">
             Upload your pitch deck <span className="text-destructive">*</span>
           </Label>
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
+          <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+            hasPitchDeck ? "border-primary bg-accent" : "border-border hover:border-primary"
+          }`}>
             <Input
               id="pitchDeck"
               type="file"
               accept=".pdf,.ppt,.pptx"
               className="hidden"
-              onChange={(e) => updateData({ pitchDeck: e.target.files?.[0] })}
+              onChange={(e) => updateData({ pitchDeck: e.target.files })}
             />
             <label htmlFor="pitchDeck" className="cursor-pointer">
-              <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-sm font-medium mb-1">Click to upload your pitch deck</p>
-              <p className="text-xs text-muted-foreground">PDF, PPT, or PPTX (max 20MB)</p>
+              {hasPitchDeck ? (
+                <>
+                  <CheckCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <p className="text-sm font-medium mb-1 text-primary">File uploaded successfully</p>
+                  <p className="text-xs text-muted-foreground">Click to change file</p>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-sm font-medium mb-1">Click to upload your pitch deck</p>
+                  <p className="text-xs text-muted-foreground">PDF, PPT, or PPTX (max 20MB)</p>
+                </>
+              )}
             </label>
           </div>
         </div>
@@ -45,7 +60,9 @@ export const PitchInformation = ({ data, updateData }: PitchInformationProps) =>
           <p className="text-sm text-muted-foreground mb-2">
             Product/Service descriptions, technical descriptions or anything else our AI can use to understand your business better
           </p>
-          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer">
+          <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer ${
+            hasAdditionalInfo ? "border-primary bg-accent" : "border-border hover:border-primary"
+          }`}>
             <Input
               id="additionalInfo"
               type="file"
@@ -55,9 +72,19 @@ export const PitchInformation = ({ data, updateData }: PitchInformationProps) =>
               onChange={(e) => updateData({ additionalInfo: e.target.files })}
             />
             <label htmlFor="additionalInfo" className="cursor-pointer">
-              <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
-              <p className="text-sm font-medium mb-1">Click to upload additional documents</p>
-              <p className="text-xs text-muted-foreground">PDF, DOC, DOCX, or TXT (max 20MB each)</p>
+              {hasAdditionalInfo ? (
+                <>
+                  <CheckCircle className="w-12 h-12 mx-auto mb-4 text-primary" />
+                  <p className="text-sm font-medium mb-1 text-primary">{data.additionalInfo.length} file(s) uploaded</p>
+                  <p className="text-xs text-muted-foreground">Click to change files</p>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                  <p className="text-sm font-medium mb-1">Click to upload additional documents</p>
+                  <p className="text-xs text-muted-foreground">PDF, DOC, DOCX, or TXT (max 20MB each)</p>
+                </>
+              )}
             </label>
           </div>
         </div>

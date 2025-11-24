@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Upload } from "lucide-react";
+import { Upload, CheckCircle } from "lucide-react";
 
 interface FinancialsProps {
   data: any;
@@ -10,6 +10,22 @@ interface FinancialsProps {
 
 export const Financials = ({ data, updateData }: FinancialsProps) => {
   const revenueTypes = ["Recurring", "Transactional", "Usage-Based / Consumption-Based", "Other"];
+  const hasFinancialModel = data.financialModel;
+
+  const FormInput = ({ id, label, required = false, placeholder = "", type = "number" }: any) => (
+    <div className="space-y-2">
+      <Label htmlFor={id}>
+        {label} {required && <span className="text-destructive">*</span>}
+      </Label>
+      <Input
+        id={id}
+        type={type}
+        value={data[id] || ""}
+        onChange={(e) => updateData({ [id]: e.target.value })}
+        placeholder={placeholder}
+      />
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -25,7 +41,9 @@ export const Financials = ({ data, updateData }: FinancialsProps) => {
           <Label htmlFor="financialModel" className="text-base font-medium">
             Upload your financial model / budget
           </Label>
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-primary transition-colors cursor-pointer">
+          <div className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer ${
+            hasFinancialModel ? "border-primary bg-accent" : "border-border hover:border-primary"
+          }`}>
             <Input
               id="financialModel"
               type="file"
@@ -34,100 +52,39 @@ export const Financials = ({ data, updateData }: FinancialsProps) => {
               onChange={(e) => updateData({ financialModel: e.target.files?.[0] })}
             />
             <label htmlFor="financialModel" className="cursor-pointer">
-              <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
-              <p className="text-sm font-medium mb-1">Click to upload financial model</p>
-              <p className="text-xs text-muted-foreground">XLSX, XLS, or CSV</p>
+              {hasFinancialModel ? (
+                <>
+                  <CheckCircle className="w-10 h-10 mx-auto mb-3 text-primary" />
+                  <p className="text-sm font-medium mb-1 text-primary">Financial model uploaded</p>
+                  <p className="text-xs text-muted-foreground">Click to change file</p>
+                </>
+              ) : (
+                <>
+                  <Upload className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+                  <p className="text-sm font-medium mb-1">Click to upload financial model</p>
+                  <p className="text-xs text-muted-foreground">XLSX, XLS, or CSV</p>
+                </>
+              )}
             </label>
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="monthlyBurn">Monthly Burn (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="monthlyBurn"
-            type="number"
-            onChange={(e) => updateData({ monthlyBurn: e.target.value })}
-            placeholder="50000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="revenueLastYear">Revenue Last Year (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="revenueLastYear"
-            type="number"
-            onChange={(e) => updateData({ revenueLastYear: e.target.value })}
-            placeholder="500000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="revenueLast12Months">Revenue Last 12 Months (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="revenueLast12Months"
-            type="number"
-            onChange={(e) => updateData({ revenueLast12Months: e.target.value })}
-            placeholder="600000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="expectedRevenueThisYear">Expected Revenue This Year (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="expectedRevenueThisYear"
-            type="number"
-            onChange={(e) => updateData({ expectedRevenueThisYear: e.target.value })}
-            placeholder="1000000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="currentMonthlyRevenue">Current Monthly Revenue (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="currentMonthlyRevenue"
-            type="number"
-            onChange={(e) => updateData({ currentMonthlyRevenue: e.target.value })}
-            placeholder="80000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="currentMRR">Current Monthly Recurring Revenue (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="currentMRR"
-            type="number"
-            onChange={(e) => updateData({ currentMRR: e.target.value })}
-            placeholder="60000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="ebitdaLastYear">EBITDA Last Year (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="ebitdaLastYear"
-            type="number"
-            onChange={(e) => updateData({ ebitdaLastYear: e.target.value })}
-            placeholder="-100000"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="ebitdaThisYear">EBITDA This Year (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="ebitdaThisYear"
-            type="number"
-            onChange={(e) => updateData({ ebitdaThisYear: e.target.value })}
-            placeholder="-50000"
-          />
-        </div>
-
+        <FormInput id="monthlyBurn" label="Monthly Burn (EUR)" required placeholder="50000" />
+        <FormInput id="revenueLastYear" label="Revenue Last Year (EUR)" required placeholder="500000" />
+        <FormInput id="revenueLast12Months" label="Revenue Last 12 Months (EUR)" required placeholder="600000" />
+        <FormInput id="expectedRevenueThisYear" label="Expected Revenue This Year (EUR)" required placeholder="1000000" />
+        <FormInput id="currentMonthlyRevenue" label="Current Monthly Revenue (EUR)" required placeholder="80000" />
+        <FormInput id="currentMRR" label="Current Monthly Recurring Revenue (EUR)" required placeholder="60000" />
+        <FormInput id="ebitdaLastYear" label="EBITDA Last Year (EUR)" required placeholder="-100000" />
+        <FormInput id="ebitdaThisYear" label="EBITDA This Year (EUR)" required placeholder="-50000" />
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="tam">Total Addressable Market (EUR) <span className="text-destructive">*</span></Label>
           <Input
             id="tam"
             type="number"
+            value={data.tam || ""}
             onChange={(e) => updateData({ tam: e.target.value })}
             placeholder="10000000000"
           />
@@ -140,6 +97,7 @@ export const Financials = ({ data, updateData }: FinancialsProps) => {
               <div key={type} className="flex items-center space-x-2">
                 <Checkbox
                   id={type}
+                  checked={data.revenueTypes?.includes(type) || false}
                   onCheckedChange={(checked) => {
                     const current = data.revenueTypes || [];
                     if (checked) {

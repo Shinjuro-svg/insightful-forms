@@ -12,6 +12,21 @@ interface FundraiseProps {
 export const Fundraise = ({ data, updateData }: FundraiseProps) => {
   const fundingStages = ["Pre-Seed", "Seed", "Series A", "Growth", "Bridge", "Other"];
 
+  const FormInput = ({ id, label, required = false, placeholder = "", type = "number" }: any) => (
+    <div className="space-y-2">
+      <Label htmlFor={id}>
+        {label} {required && <span className="text-destructive">*</span>}
+      </Label>
+      <Input
+        id={id}
+        type={type}
+        value={data[id] || ""}
+        onChange={(e) => updateData({ [id]: e.target.value })}
+        placeholder={placeholder}
+      />
+    </div>
+  );
+
   return (
     <div className="space-y-6">
       <div>
@@ -29,6 +44,7 @@ export const Fundraise = ({ data, updateData }: FundraiseProps) => {
               <div key={stage} className="flex items-center space-x-2">
                 <Checkbox
                   id={stage}
+                  checked={data.fundingStages?.includes(stage) || false}
                   onCheckedChange={(checked) => {
                     const current = data.fundingStages || [];
                     if (checked) {
@@ -50,18 +66,20 @@ export const Fundraise = ({ data, updateData }: FundraiseProps) => {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="seekingToRaise">How much are you seeking to raise? (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="seekingToRaise"
-            type="number"
-            onChange={(e) => updateData({ seekingToRaise: e.target.value })}
+          <FormInput 
+            id="seekingToRaise" 
+            label="How much are you seeking to raise? (EUR)" 
+            required 
             placeholder="1000000"
           />
         </div>
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="externalFunding">Have you raised external funding before in your company? <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ externalFunding: value })}>
+          <Select 
+            value={data.externalFunding || ""} 
+            onValueChange={(value) => updateData({ externalFunding: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
@@ -72,61 +90,49 @@ export const Fundraise = ({ data, updateData }: FundraiseProps) => {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="previousRoundAmount">How much did you raise in previous round? (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="previousRoundAmount"
-            type="number"
-            onChange={(e) => updateData({ previousRoundAmount: e.target.value })}
-            placeholder="500000"
-          />
-        </div>
+        <FormInput 
+          id="previousRoundAmount" 
+          label="How much did you raise in previous round? (EUR)" 
+          required 
+          placeholder="500000"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="numberOfPreviousRounds">Number of previous rounds <span className="text-destructive">*</span></Label>
-          <Input
-            id="numberOfPreviousRounds"
-            type="number"
-            onChange={(e) => updateData({ numberOfPreviousRounds: e.target.value })}
-            placeholder="2"
-          />
-        </div>
+        <FormInput 
+          id="numberOfPreviousRounds" 
+          label="Number of previous rounds" 
+          required 
+          placeholder="2"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="preMoneyValuationCurrent">Pre-money valuation, this round? (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="preMoneyValuationCurrent"
-            type="number"
-            onChange={(e) => updateData({ preMoneyValuationCurrent: e.target.value })}
-            placeholder="5000000"
-          />
-        </div>
+        <FormInput 
+          id="preMoneyValuationCurrent" 
+          label="Pre-money valuation, this round? (EUR)" 
+          required 
+          placeholder="5000000"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="preMoneyValuationPrevious">Pre-money valuation, previous round (EUR) <span className="text-destructive">*</span></Label>
-          <Input
-            id="preMoneyValuationPrevious"
-            type="number"
-            onChange={(e) => updateData({ preMoneyValuationPrevious: e.target.value })}
-            placeholder="2000000"
-          />
-        </div>
+        <FormInput 
+          id="preMoneyValuationPrevious" 
+          label="Pre-money valuation, previous round (EUR)" 
+          required 
+          placeholder="2000000"
+        />
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="closingDate">Estimated date for closing the round <span className="text-destructive">*</span></Label>
           <Input
             id="closingDate"
             type="date"
+            value={data.closingDate || ""}
             onChange={(e) => updateData({ closingDate: e.target.value })}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="minimumTicket">Minimum ticket size per investor <span className="text-destructive">*</span></Label>
-          <Input
-            id="minimumTicket"
-            type="number"
-            onChange={(e) => updateData({ minimumTicket: e.target.value })}
+          <FormInput 
+            id="minimumTicket" 
+            label="Minimum ticket size per investor" 
+            required 
             placeholder="50000"
           />
         </div>
@@ -135,6 +141,7 @@ export const Fundraise = ({ data, updateData }: FundraiseProps) => {
           <Label htmlFor="fundraisingHistory">Tell us about your fundraising targets and history <span className="text-destructive">*</span></Label>
           <Textarea
             id="fundraisingHistory"
+            value={data.fundraisingHistory || ""}
             onChange={(e) => updateData({ fundraisingHistory: e.target.value })}
             placeholder="Describe your fundraising journey, targets, and milestones..."
             rows={4}
@@ -145,6 +152,7 @@ export const Fundraise = ({ data, updateData }: FundraiseProps) => {
           <Label htmlFor="investorContribution">What do you want your investors to contribute if they invest in your business? <span className="text-destructive">*</span></Label>
           <Textarea
             id="investorContribution"
+            value={data.investorContribution || ""}
             onChange={(e) => updateData({ investorContribution: e.target.value })}
             placeholder="Describe what value you're looking for beyond capital (e.g., industry expertise, network, mentorship)..."
             rows={4}

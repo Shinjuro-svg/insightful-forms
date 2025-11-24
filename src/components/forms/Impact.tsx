@@ -43,6 +43,7 @@ export const Impact = ({ data, updateData }: ImpactProps) => {
           <Label htmlFor="impactSentence">In one sentence, what impact are you generating? <span className="text-destructive">*</span></Label>
           <Textarea
             id="impactSentence"
+            value={data.impactSentence || ""}
             onChange={(e) => updateData({ impactSentence: e.target.value })}
             placeholder="Describe the core impact your company creates..."
             rows={3}
@@ -51,7 +52,10 @@ export const Impact = ({ data, updateData }: ImpactProps) => {
 
         <div className="space-y-2">
           <Label htmlFor="primarySDG">What is your primary SDG? <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ primarySDG: value })}>
+          <Select 
+            value={data.primarySDG || ""} 
+            onValueChange={(value) => updateData({ primarySDG: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select your primary Sustainable Development Goal" />
             </SelectTrigger>
@@ -73,6 +77,7 @@ export const Impact = ({ data, updateData }: ImpactProps) => {
           </p>
           <Textarea
             id="deiCriteria"
+            value={data.deiCriteria || ""}
             onChange={(e) => updateData({ deiCriteria: e.target.value })}
             placeholder="Describe relevant DEI aspects of your founding team..."
             rows={4}
@@ -83,6 +88,7 @@ export const Impact = ({ data, updateData }: ImpactProps) => {
           <Label htmlFor="changeChallenge">What do you want to change or challenge with your business concept? <span className="text-destructive">*</span></Label>
           <Textarea
             id="changeChallenge"
+            value={data.changeChallenge || ""}
             onChange={(e) => updateData({ changeChallenge: e.target.value })}
             placeholder="Describe the status quo you're challenging and the change you want to drive..."
             rows={5}

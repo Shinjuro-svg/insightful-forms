@@ -2,11 +2,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 interface BasicInfoProps {
   data: any;
   updateData: (data: any) => void;
 }
+
+const FormInput = ({ 
+  id, 
+  label, 
+  required = false, 
+  type = "text", 
+  placeholder = "", 
+  value, 
+  onChange 
+}: any) => (
+  <div className="space-y-2">
+    <Label htmlFor={id}>
+      {label} {required && <span className="text-destructive">*</span>}
+    </Label>
+    <Input
+      id={id}
+      type={type}
+      value={value || ""}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+    />
+  </div>
+);
 
 export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
   const titles = ["Mr.", "Mrs.", "Miss", "Ms.", "Mx."];
@@ -23,7 +47,10 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <Label htmlFor="title">Title <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ title: value })}>
+          <Select 
+            value={data.title || ""} 
+            onValueChange={(value) => updateData({ title: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select title" />
             </SelectTrigger>
@@ -35,111 +62,114 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="firstName">First Name <span className="text-destructive">*</span></Label>
-          <Input
-            id="firstName"
-            onChange={(e) => updateData({ firstName: e.target.value })}
-            placeholder="Enter your first name"
-          />
-        </div>
+        <FormInput
+          id="firstName"
+          label="First Name"
+          required
+          value={data.firstName}
+          onChange={(val: string) => updateData({ firstName: val })}
+          placeholder="Enter your first name"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="lastName">Last Name <span className="text-destructive">*</span></Label>
-          <Input
-            id="lastName"
-            onChange={(e) => updateData({ lastName: e.target.value })}
-            placeholder="Enter your last name"
-          />
-        </div>
+        <FormInput
+          id="lastName"
+          label="Last Name"
+          required
+          value={data.lastName}
+          onChange={(val: string) => updateData({ lastName: val })}
+          placeholder="Enter your last name"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="email">Email Address <span className="text-destructive">*</span></Label>
-          <Input
-            id="email"
-            type="email"
-            onChange={(e) => updateData({ email: e.target.value })}
-            placeholder="your@email.com"
-          />
-        </div>
+        <FormInput
+          id="email"
+          label="Email Address"
+          type="email"
+          required
+          value={data.email}
+          onChange={(val: string) => updateData({ email: val })}
+          placeholder="your@email.com"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="phone">Contact Number <span className="text-destructive">*</span></Label>
-          <Input
-            id="phone"
-            type="tel"
-            onChange={(e) => updateData({ phone: e.target.value })}
-            placeholder="+1 (555) 000-0000"
-          />
-        </div>
+        <FormInput
+          id="phone"
+          label="Contact Number"
+          type="tel"
+          required
+          value={data.phone}
+          onChange={(val: string) => updateData({ phone: val })}
+          placeholder="+1 (555) 000-0000"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="companyName">Company Name <span className="text-destructive">*</span></Label>
-          <Input
-            id="companyName"
-            onChange={(e) => updateData({ companyName: e.target.value })}
-            placeholder="Your Company Ltd."
-          />
-        </div>
+        <FormInput
+          id="companyName"
+          label="Company Name"
+          required
+          value={data.companyName}
+          onChange={(val: string) => updateData({ companyName: val })}
+          placeholder="Your Company Ltd."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="corporateId">Corporate ID Number <span className="text-destructive">*</span></Label>
-          <Input
-            id="corporateId"
-            onChange={(e) => updateData({ corporateId: e.target.value })}
-            placeholder="12345678"
-          />
-        </div>
+        <FormInput
+          id="corporateId"
+          label="Corporate ID Number"
+          required
+          value={data.corporateId}
+          onChange={(val: string) => updateData({ corporateId: val })}
+          placeholder="12345678"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="foundingDate">Founding Date <span className="text-destructive">*</span></Label>
-          <Input
-            id="foundingDate"
-            type="date"
-            onChange={(e) => updateData({ foundingDate: e.target.value })}
-          />
-        </div>
+        <FormInput
+          id="foundingDate"
+          label="Founding Date"
+          type="date"
+          required
+          value={data.foundingDate}
+          onChange={(val: string) => updateData({ foundingDate: val })}
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="website">Company Website <span className="text-destructive">*</span></Label>
-          <Input
-            id="website"
-            type="url"
-            onChange={(e) => updateData({ website: e.target.value })}
-            placeholder="https://yourcompany.com"
-          />
-        </div>
+        <FormInput
+          id="website"
+          label="Company Website"
+          type="url"
+          required
+          value={data.website}
+          onChange={(val: string) => updateData({ website: val })}
+          placeholder="https://yourcompany.com"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="streetAddress">Company Street Address <span className="text-destructive">*</span></Label>
-          <Input
-            id="streetAddress"
-            onChange={(e) => updateData({ streetAddress: e.target.value })}
-            placeholder="123 Main Street"
-          />
-        </div>
+        <FormInput
+          id="streetAddress"
+          label="Company Street Address"
+          required
+          value={data.streetAddress}
+          onChange={(val: string) => updateData({ streetAddress: val })}
+          placeholder="123 Main Street"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="zipCode">Company Zip Code <span className="text-destructive">*</span></Label>
-          <Input
-            id="zipCode"
-            onChange={(e) => updateData({ zipCode: e.target.value })}
-            placeholder="12345"
-          />
-        </div>
+        <FormInput
+          id="zipCode"
+          label="Company Zip Code"
+          required
+          value={data.zipCode}
+          onChange={(val: string) => updateData({ zipCode: val })}
+          placeholder="12345"
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="city">Company City <span className="text-destructive">*</span></Label>
-          <Input
-            id="city"
-            onChange={(e) => updateData({ city: e.target.value })}
-            placeholder="San Francisco"
-          />
-        </div>
+        <FormInput
+          id="city"
+          label="Company City"
+          required
+          value={data.city}
+          onChange={(val: string) => updateData({ city: val })}
+          placeholder="San Francisco"
+        />
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="country">Company Country <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ country: value })}>
+          <Select 
+            value={data.country || ""} 
+            onValueChange={(value) => updateData({ country: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select country" />
             </SelectTrigger>
@@ -155,7 +185,10 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="primaryLocation">Primary Location of Operations <span className="text-destructive">*</span></Label>
-          <Select onValueChange={(value) => updateData({ primaryLocation: value })}>
+          <Select 
+            value={data.primaryLocation || ""} 
+            onValueChange={(value) => updateData({ primaryLocation: value })}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select primary location" />
             </SelectTrigger>
@@ -169,80 +202,81 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="linkedinFounder1">LinkedIn Profile, Founder #1 <span className="text-destructive">*</span></Label>
-          <Input
-            id="linkedinFounder1"
-            type="url"
-            onChange={(e) => updateData({ linkedinFounder1: e.target.value })}
-            placeholder="https://linkedin.com/in/..."
-          />
-        </div>
+        <FormInput
+          id="linkedinFounder1"
+          label="LinkedIn Profile, Founder #1"
+          type="url"
+          required
+          value={data.linkedinFounder1}
+          onChange={(val: string) => updateData({ linkedinFounder1: val })}
+          placeholder="https://linkedin.com/in/..."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="linkedinFounder2">LinkedIn Profile, Founder #2</Label>
-          <Input
-            id="linkedinFounder2"
-            type="url"
-            onChange={(e) => updateData({ linkedinFounder2: e.target.value })}
-            placeholder="https://linkedin.com/in/..."
-          />
-        </div>
+        <FormInput
+          id="linkedinFounder2"
+          label="LinkedIn Profile, Founder #2"
+          type="url"
+          value={data.linkedinFounder2}
+          onChange={(val: string) => updateData({ linkedinFounder2: val })}
+          placeholder="https://linkedin.com/in/..."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="linkedinFounder3">LinkedIn Profile, Founder #3</Label>
-          <Input
-            id="linkedinFounder3"
-            type="url"
-            onChange={(e) => updateData({ linkedinFounder3: e.target.value })}
-            placeholder="https://linkedin.com/in/..."
-          />
-        </div>
+        <FormInput
+          id="linkedinFounder3"
+          label="LinkedIn Profile, Founder #3"
+          type="url"
+          value={data.linkedinFounder3}
+          onChange={(val: string) => updateData({ linkedinFounder3: val })}
+          placeholder="https://linkedin.com/in/..."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="linkedinCompany">LinkedIn Page, Company</Label>
-          <Input
-            id="linkedinCompany"
-            type="url"
-            onChange={(e) => updateData({ linkedinCompany: e.target.value })}
-            placeholder="https://linkedin.com/company/..."
-          />
-        </div>
+        <FormInput
+          id="linkedinCompany"
+          label="LinkedIn Page, Company"
+          type="url"
+          value={data.linkedinCompany}
+          onChange={(val: string) => updateData({ linkedinCompany: val })}
+          placeholder="https://linkedin.com/company/..."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="twitterCompany">Twitter Page, Company</Label>
-          <Input
-            id="twitterCompany"
-            type="url"
-            onChange={(e) => updateData({ twitterCompany: e.target.value })}
-            placeholder="https://twitter.com/..."
-          />
-        </div>
+        <FormInput
+          id="twitterCompany"
+          label="Twitter Page, Company"
+          type="url"
+          value={data.twitterCompany}
+          onChange={(val: string) => updateData({ twitterCompany: val })}
+          placeholder="https://twitter.com/..."
+        />
 
-        <div className="space-y-2">
-          <Label htmlFor="pitchDeckLink">Link to Pitch Deck <span className="text-destructive">*</span></Label>
-          <Input
-            id="pitchDeckLink"
-            type="url"
-            onChange={(e) => updateData({ pitchDeckLink: e.target.value })}
-            placeholder="https://..."
-          />
-        </div>
+        <FormInput
+          id="pitchDeckLink"
+          label="Link to Pitch Deck"
+          type="url"
+          required
+          value={data.pitchDeckLink}
+          onChange={(val: string) => updateData({ pitchDeckLink: val })}
+          placeholder="https://..."
+        />
 
         <div className="space-y-2 md:col-span-2">
           <Label htmlFor="meetingLink">Meeting Booking Link <span className="text-destructive">*</span></Label>
           <Input
             id="meetingLink"
             type="url"
+            value={data.meetingLink || ""}
             onChange={(e) => updateData({ meetingLink: e.target.value })}
             placeholder="Calendly, Google Calendar, etc."
           />
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="experienceFounder1">Professional Experiences & Educational Background, Founder #1 <span className="text-destructive">*</span></Label>
+          <Label htmlFor="experienceFounder1">
+            Professional Experiences & Educational Background, Founder #1{" "}
+            <span className="text-destructive">*</span>
+          </Label>
           <Textarea
             id="experienceFounder1"
+            value={data.experienceFounder1 || ""}
             onChange={(e) => updateData({ experienceFounder1: e.target.value })}
             placeholder="Describe professional experiences and educational background..."
             rows={4}
@@ -250,9 +284,12 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="experienceFounder2">Professional Experiences & Educational Background, Founder #2</Label>
+          <Label htmlFor="experienceFounder2">
+            Professional Experiences & Educational Background, Founder #2
+          </Label>
           <Textarea
             id="experienceFounder2"
+            value={data.experienceFounder2 || ""}
             onChange={(e) => updateData({ experienceFounder2: e.target.value })}
             placeholder="Describe professional experiences and educational background..."
             rows={4}
@@ -260,9 +297,12 @@ export const BasicInfo = ({ data, updateData }: BasicInfoProps) => {
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="experienceFounder3">Professional Experiences & Educational Background, Founder #3</Label>
+          <Label htmlFor="experienceFounder3">
+            Professional Experiences & Educational Background, Founder #3
+          </Label>
           <Textarea
             id="experienceFounder3"
+            value={data.experienceFounder3 || ""}
             onChange={(e) => updateData({ experienceFounder3: e.target.value })}
             placeholder="Describe professional experiences and educational background..."
             rows={4}

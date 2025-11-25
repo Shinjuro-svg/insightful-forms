@@ -85,6 +85,83 @@ export const Operations = ({ data, updateData }: OperationsProps) => {
             rows={5}
           />
         </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="keyKPIs">What are the 2-3 most important KPI's that will help you understand if you are reaching PMF? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="keyKPIs"
+            value={data.keyKPIs || ""}
+            onChange={(e) => updateData({ keyKPIs: e.target.value })}
+            placeholder="List your key performance indicators..."
+            rows={4}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="goToMarket">What is your go-to-market approach? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="goToMarket"
+            value={data.goToMarket || ""}
+            onChange={(e) => updateData({ goToMarket: e.target.value })}
+            placeholder="Describe your strategy for reaching and acquiring customers..."
+            rows={5}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="uglySlide">Tell us about your ugly slide. What keeps you up at night? If you fail, what will be the reason? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="uglySlide"
+            value={data.uglySlide || ""}
+            onChange={(e) => updateData({ uglySlide: e.target.value })}
+            placeholder="Be honest about your biggest challenges and risks..."
+            rows={5}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="customerVsUser">Who is your customer and who is your user (if they are not identical)? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="customerVsUser"
+            value={data.customerVsUser || ""}
+            onChange={(e) => updateData({ customerVsUser: e.target.value })}
+            placeholder="Clarify the distinction between who pays and who uses your product..."
+            rows={4}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="competitors">Who are your main competitors? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="competitors"
+            value={data.competitors || ""}
+            onChange={(e) => updateData({ competitors: e.target.value })}
+            placeholder="List and describe your main competitors..."
+            rows={4}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="competitiveAdvantage">How are you different from your competitors? What makes you win? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="competitiveAdvantage"
+            value={data.competitiveAdvantage || ""}
+            onChange={(e) => updateData({ competitiveAdvantage: e.target.value })}
+            placeholder="Explain your unique value proposition and competitive advantages..."
+            rows={5}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="totalUsers">How many total members/users/customers do you have right now? <span className="text-destructive">*</span></Label>
+          <Textarea
+            id="totalUsers"
+            value={data.totalUsers || ""}
+            onChange={(e) => updateData({ totalUsers: e.target.value })}
+            placeholder="Provide current user/customer numbers..."
+            rows={3}
+          />
+        </div>
       </div>
     </div>
   );

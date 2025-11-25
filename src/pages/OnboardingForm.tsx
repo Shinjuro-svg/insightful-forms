@@ -10,6 +10,10 @@ import { Financials } from "@/components/forms/Financials";
 import { Fundraise } from "@/components/forms/Fundraise";
 import { Impact } from "@/components/forms/Impact";
 import { Operations } from "@/components/forms/Operations";
+import { StartupDescription } from "@/components/forms/StartupDescription";
+import { Team } from "@/components/forms/Team";
+import { Vision } from "@/components/forms/Vision";
+import { ReachOut } from "@/components/forms/ReachOut";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
@@ -19,6 +23,10 @@ import {
   fundraiseSchema,
   impactSchema,
   operationsSchema,
+  startupDescriptionSchema,
+  teamSchema,
+  visionSchema,
+  reachOutSchema,
 } from "@/lib/validationSchemas";
 
 const OnboardingForm = () => {
@@ -34,6 +42,10 @@ const OnboardingForm = () => {
     "Fundraise",
     "Impact",
     "Operations",
+    "Description",
+    "Team",
+    "Vision",
+    "Reach Out",
   ];
 
   const validateCurrentStep = (): boolean => {
@@ -59,6 +71,18 @@ const OnboardingForm = () => {
         case 6:
           operationsSchema.parse(formData);
           break;
+        case 7:
+          startupDescriptionSchema.parse(formData);
+          break;
+        case 8:
+          teamSchema.parse(formData);
+          break;
+        case 9:
+          visionSchema.parse(formData);
+          break;
+        case 10:
+          reachOutSchema.parse(formData);
+          break;
       }
       return true;
     } catch (error: any) {
@@ -77,7 +101,7 @@ const OnboardingForm = () => {
   };
 
   const handleNext = () => {
-    if (validateCurrentStep() && currentStep < 6) {
+    if (validateCurrentStep() && currentStep < 10) {
       setCurrentStep(currentStep + 1);
       setValidationErrors([]);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -132,6 +156,14 @@ const OnboardingForm = () => {
         return <Impact data={formData} updateData={updateFormData} />;
       case 6:
         return <Operations data={formData} updateData={updateFormData} />;
+      case 7:
+        return <StartupDescription data={formData} updateData={updateFormData} />;
+      case 8:
+        return <Team data={formData} updateData={updateFormData} />;
+      case 9:
+        return <Vision data={formData} updateData={updateFormData} />;
+      case 10:
+        return <ReachOut data={formData} updateData={updateFormData} />;
       default:
         return null;
     }
@@ -152,7 +184,7 @@ const OnboardingForm = () => {
           </p>
         </div>
 
-        <FormProgress currentStep={currentStep} totalSteps={6} steps={steps} />
+        <FormProgress currentStep={currentStep} totalSteps={10} steps={steps} />
 
         <div className="bg-card rounded-2xl shadow-lg p-8 mb-8">
           {validationErrors.length > 0 && (
@@ -180,7 +212,7 @@ const OnboardingForm = () => {
               <ArrowLeft className="w-4 h-4" />
               Previous
             </Button>
-            {currentStep < 6 ? (
+            {currentStep < 10 ? (
               <Button onClick={handleNext} className="gap-2">
                 Next
                 <ArrowRight className="w-4 h-4" />

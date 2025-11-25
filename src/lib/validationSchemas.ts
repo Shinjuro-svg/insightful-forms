@@ -112,4 +112,68 @@ export const operationsSchema = z.object({
   launchDate: z.string().min(1, "Launch date is required"),
   traction: z.string().min(1, "Traction description is required").max(2000, "Must be less than 2000 characters"),
   idealCustomer: z.string().min(1, "Ideal customer description is required").max(2000, "Must be less than 2000 characters"),
+  keyKPIs: z.string().min(1, "Key KPIs are required").max(2000, "Must be less than 2000 characters"),
+  goToMarket: z.string().min(1, "Go-to-market approach is required").max(2000, "Must be less than 2000 characters"),
+  uglySlide: z.string().min(1, "Ugly slide description is required").max(2000, "Must be less than 2000 characters"),
+  customerVsUser: z.string().min(1, "Customer vs user description is required").max(2000, "Must be less than 2000 characters"),
+  competitors: z.string().min(1, "Competitors description is required").max(2000, "Must be less than 2000 characters"),
+  competitiveAdvantage: z.string().min(1, "Competitive advantage is required").max(2000, "Must be less than 2000 characters"),
+  totalUsers: z.string().min(1, "Total users/customers count is required").max(500, "Must be less than 500 characters"),
+});
+
+// Step 7: Startup Description
+export const startupDescriptionSchema = z.object({
+  descriptionOneSentence: z.string().min(1, "One sentence description is required").max(500, "Must be less than 500 characters"),
+  description140: z.string().min(1, "140 character description is required").max(140, "Must be 140 characters or less"),
+  description30Words: z.string().min(1, "30 word description is required").max(500, "Must be less than 500 characters"),
+  description255: z.string().min(1, "255 character description is required").max(255, "Must be 255 characters or less"),
+  description250Words: z.string().min(1, "250 word description is required").max(3000, "Must be less than 3000 characters"),
+  descriptionLong: z.string().min(1, "Long description is required").max(5000, "Must be less than 5000 characters"),
+  aboutCompany: z.string().min(1, "Company information is required").max(3000, "Must be less than 3000 characters"),
+  industrySector: z.string().min(1, "Industry/Sector is required").max(500, "Must be less than 500 characters"),
+  b2bComponent: z.string().min(1, "B2B component information is required").max(1000, "Must be less than 1000 characters"),
+  technologyTags: z.array(z.string()).min(1, "At least one technology tag is required"),
+  softwareProduct: z.string().min(1, "Please select if you're building a software product"),
+  problemSolving: z.string().min(1, "Problem description is required").max(2000, "Must be less than 2000 characters"),
+  solution: z.string().min(1, "Solution description is required").max(2000, "Must be less than 2000 characters"),
+  passion: z.string().min(1, "Passion description is required").max(2000, "Must be less than 2000 characters"),
+  businessModel: z.string().min(1, "Business model is required").max(2000, "Must be less than 2000 characters"),
+  defensibility: z.string().min(1, "Defensibility description is required").max(2000, "Must be less than 2000 characters"),
+  winningSentence: z.string().min(1, "Winning sentence is required").max(500, "Must be less than 500 characters"),
+  uniqueTechnology: z.string().min(1, "Unique technology description is required").max(2000, "Must be less than 2000 characters"),
+  importantTruth: z.string().min(1, "Important truth is required").max(2000, "Must be less than 2000 characters"),
+  greatestChallenges: z.string().min(1, "Greatest challenges are required").max(2000, "Must be less than 2000 characters"),
+});
+
+// Step 8: Team
+export const teamSchema = z.object({
+  teamSize: z.string().min(1, "Team size is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Must be a valid positive number",
+  }),
+  numberOfFounders: z.string().min(1, "Number of founders is required").refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Must be a valid positive number",
+  }),
+  femaleFounders: z.string().min(1, "Please select if you have female founders"),
+  femaleLeadershipPercentage: z.string().min(1, "Female leadership percentage is required").refine((val) => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 100, {
+    message: "Must be a valid percentage between 0 and 100",
+  }),
+  builtBusinessBefore: z.string().min(1, "Previous business experience is required").max(2000, "Must be less than 2000 characters"),
+  standoutExperiences: z.string().min(1, "Standout experiences are required").max(2000, "Must be less than 2000 characters"),
+  softwareProductTeam: z.string().min(1, "Software product team experience is required").max(2000, "Must be less than 2000 characters"),
+  foundingTeamDetails: z.string().min(1, "Founding team details are required").max(3000, "Must be less than 3000 characters"),
+  backgroundInformsProblem: z.string().min(1, "Background information is required").max(2000, "Must be less than 2000 characters"),
+});
+
+// Step 9: Vision
+export const visionSchema = z.object({
+  message: z.string().min(1, "Message is required").max(2000, "Must be less than 2000 characters"),
+  purposeVision: z.string().min(1, "Purpose/vision statement is required").max(2000, "Must be less than 2000 characters"),
+  sectorTransformation: z.string().min(1, "Sector transformation description is required").max(2000, "Must be less than 2000 characters"),
+  arcOfHistory: z.string().min(1, "Arc of history description is required").max(2000, "Must be less than 2000 characters"),
+});
+
+// Step 10: Reach Out
+export const reachOutSchema = z.object({
+  investorsToAvoid: z.string().max(2000, "Must be less than 2000 characters").optional().or(z.literal("")),
+  emailCredentials: z.string().max(500, "Must be less than 500 characters").optional().or(z.literal("")),
 });

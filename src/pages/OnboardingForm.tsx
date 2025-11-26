@@ -3,7 +3,7 @@ import { FormProgress } from "@/components/FormProgress";
 import { TrustBadge } from "@/components/TrustBadge";
 import { StatsCard } from "@/components/StatsCard";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
+import { ArrowRight, ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { PitchInformation } from "@/components/forms/PitchInformation";
 import { BasicInfo } from "@/components/forms/BasicInfo";
 import { Financials } from "@/components/forms/Financials";
@@ -16,6 +16,7 @@ import { Vision } from "@/components/forms/Vision";
 import { ReachOut } from "@/components/forms/ReachOut";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { supabase } from "@/integrations/supabase/client";
 import {
   pitchInformationSchema,
   basicInfoSchema,
@@ -33,6 +34,7 @@ const OnboardingForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<any>({});
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const steps = [
@@ -121,21 +123,62 @@ const OnboardingForm = () => {
       return;
     }
 
-    // TODO: Replace with actual R2 bucket integration
-    console.log("Form data to be submitted:", formData);
-    
-    toast({
-      title: "Form Submitted Successfully!",
-      description: "Your data will be uploaded to R2 bucket (integration pending).",
-    });
+    setIsSubmitting(true);
 
-    // Placeholder for R2 bucket integration
-    // Example:
-    // const response = await fetch('YOUR_R2_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formData)
-    // });
+    try {
+      // Create FormData for multipart upload
+      const submitFormData = new FormData();
+      
+      // Append files if they exist
+      if (formData.pitchDeck && formData.pitchDeck[0]) {
+        submitFormData.append('pitchDeck', formData.pitchDeck[0]);
+      }
+      if (formData.additionalInfo && formData.additionalInfo[0]) {
+        submitFormData.append('additionalInfo', formData.additionalInfo[0]);
+      }
+      if (formData.financialModel && formData.financialModel[0]) {
+        submitFormData.append('financialModel', formData.financialModel[0]);
+      }
+      
+      // Append JSON data (excluding file objects)
+      const jsonData = { ...formData };
+      delete jsonData.pitchDeck;
+      delete jsonData.additionalInfo;
+      delete jsonData.financialModel;
+      submitFormData.append('formData', JSON.stringify(jsonData));
+
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('submit-form', {
+        body: submitFormData,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to submit form');
+      }
+
+      toast({
+        title: "Form Submitted Successfully!",
+        description: `Your application has been received. Submission ID: ${data.submissionId}`,
+      });
+
+      // Optionally reset form or redirect
+      console.log("Submission successful:", data);
+      
+    } catch (error: unknown) {
+      console.error("Submission error:", error);
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred while submitting the form';
+      toast({
+        title: "Submission Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const updateFormData = (stepData: any) => {
@@ -218,9 +261,18 @@ const OnboardingForm = () => {
                 <ArrowRight className="w-4 h-4" />
               </Button>
             ) : (
-              <Button onClick={handleSubmit} className="gap-2">
-                Submit Application
-                <ArrowRight className="w-4 h-4" />
+              <Button onClick={handleSubmit} disabled={isSubmitting} className="gap-2">
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  <>
+                    Submit Application
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </Button>
             )}
           </div>
